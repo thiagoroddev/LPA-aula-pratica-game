@@ -3,7 +3,8 @@
 import pygame
 import sys
 
-from game.Const import WIN_WIDTH, WIN_HEIGHT
+from game.Const import WIN_WIDTH, WIN_HEIGHT, MENU_OPTIONS
+from game.Level import Level
 from game.Menu import Menu
 
 class Game:
@@ -19,10 +20,11 @@ class Game:
         #Captura a decisão do usuário
         menu_return = menu.run()
 
-
-        if menu_return == 'EXIT':
+        if menu_return in [MENU_OPTIONS[0], MENU_OPTIONS[1], MENU_OPTIONS[2]]:
+            level = Level(self.window, 'Level1', menu_return)
+            level_return = level.run()
+        elif menu_return == 'EXIT':
             pygame.quit()
             sys.exit()
-
-        elif menu_return == 'START':
-            print('Inciando o jogo')
+        else:
+            pass

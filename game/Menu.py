@@ -5,7 +5,7 @@ import sys #Necessário para fechar o game corretamente
 
 from pygame import Surface, Font
 
-from game.Const import WIN_WIDTH, COLOR_ORANGE, MENU_OPTIONS, COLOR_WHITE
+from game.Const import WIN_WIDTH, COLOR_ORANGE, MENU_OPTIONS, COLOR_WHITE, COLOR_YELLOW
 
 
 class Menu:
@@ -25,7 +25,7 @@ class Menu:
     def run(self,):
         # 1. Inicia a música em loop (-1 significa loop infinito)
         pygame.mixer_music.play(-1)
-
+        menu_option = 0
         #Loop específico do Menu
         while True:
             # Apenas desenha a imagem carregada na memória
@@ -35,9 +35,14 @@ class Menu:
             self.menu_text(text_size=130, text="Shooter", text_color=COLOR_ORANGE,
                            text_center_pos=((WIN_WIDTH / 2), 300))
 
+
+
             for i in range(len(MENU_OPTIONS)):
-                self.menu_text(text_size=30,text=MENU_OPTIONS[i], text_color=COLOR_WHITE,
-                           text_center_pos=((WIN_WIDTH / 2), 400 + 30 * i))
+                if i == menu_option:
+                    self.menu_text(text_size=30,text=MENU_OPTIONS[i], text_color=COLOR_YELLOW, text_center_pos=((WIN_WIDTH / 2), 400 + 30 * i))
+                else:
+                    self.menu_text(text_size=30, text=MENU_OPTIONS[i], text_color=COLOR_WHITE,
+                                   text_center_pos=((WIN_WIDTH / 2), 400 + 30 * i))
 
             # Atualiza a tela inteira
             pygame.display.flip()
@@ -50,6 +55,22 @@ class Menu:
                     if event.key == pygame.K_RETURN:
                         pygame.mixer_music.stop()
                         return 'START' #Avisa ao Game que é para jogar
+
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_DOWN:
+                        if menu_option <len(MENU_OPTIONS) -1:
+                            menu_option += 1
+                        else:
+                            menu_option = 0
+
+                    if event.key == pygame.K_UP:
+                        if menu_option > 0:
+                            menu_option -= 1
+                        else:
+                            menu_option = len(MENU_OPTIONS) -1
+
+                    if event.key == pygame.K_RETURN:
+                        return MENU_OPTIONS[menu_option]
 
 
 
