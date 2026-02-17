@@ -19,7 +19,12 @@ class Menu:
         #Carrega a música(apenas carrega, não toca)
         # Nota: mixer.music é para streaming (arquivos longos).
         # Para sons curtos (tiros, pulos), usa-se pygame.Sound.
-        pygame.mixer_music.load('asset/Music.mp3')
+        pygame.mixer_music.load('./asset/Music.mp3')
+
+        # --- OTIMIZAÇÃO: Carrega as fontes UMA VEZ ---
+        self.font_title = pygame.font.SysFont('Arial', size=150)
+        self.font_subtitle = pygame.font.SysFont('Arial', size=130)
+        self.font_option = pygame.font.SysFont('Arial', size=30)
 
 
     def run(self,):
@@ -31,17 +36,17 @@ class Menu:
             # Apenas desenha a imagem carregada na memória
             self.window.blit(source=self.surf, dest=self.rect)
 
-            self.menu_text(text_size=150, text="Mountain", text_color=COLOR_ORANGE, text_center_pos=((WIN_WIDTH /2), 170))
-            self.menu_text(text_size=130, text="Shooter", text_color=COLOR_ORANGE,
+            self.menu_text(self.font_title, text="Mountain", text_color=COLOR_ORANGE, text_center_pos=((WIN_WIDTH /2), 170))
+            self.menu_text(self.font_subtitle, text="Shooter", text_color=COLOR_ORANGE,
                            text_center_pos=((WIN_WIDTH / 2), 300))
 
 
 
             for i in range(len(MENU_OPTIONS)):
                 if i == menu_option:
-                    self.menu_text(text_size=30,text=MENU_OPTIONS[i], text_color=COLOR_YELLOW, text_center_pos=((WIN_WIDTH / 2), 400 + 30 * i))
+                    self.menu_text(self.font_option,text=MENU_OPTIONS[i], text_color=COLOR_YELLOW, text_center_pos=((WIN_WIDTH / 2), 400 + 30 * i))
                 else:
-                    self.menu_text(text_size=30, text=MENU_OPTIONS[i], text_color=COLOR_WHITE,
+                    self.menu_text(self.font_option, text=MENU_OPTIONS[i], text_color=COLOR_WHITE,
                                    text_center_pos=((WIN_WIDTH / 2), 400 + 30 * i))
 
             # Atualiza a tela inteira
@@ -50,11 +55,6 @@ class Menu:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return 'EXIT' #Avisa ao Game que é para fechar tudo
-
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_RETURN:
-                        pygame.mixer_music.stop()
-                        return 'START' #Avisa ao Game que é para jogar
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_DOWN:
@@ -70,6 +70,7 @@ class Menu:
                             menu_option = len(MENU_OPTIONS) -1
 
                     if event.key == pygame.K_RETURN:
+                        pygame.mixer_music.stop()
                         return MENU_OPTIONS[menu_option]
 
 
@@ -77,8 +78,7 @@ class Menu:
 
 
 
-    def menu_text(self, text_size: int, text: str, text_color: tuple, text_center_pos:tuple):
-        text_font: Font = pygame.font.SysFont('Arial', size=text_size)
-        text_surt: Surface = text_font.render(text, True, text_color).convert_alpha()
+    def menu_text(self,font:Font, text: str, text_color: tuple, text_center_pos:tuple):
+        text_surt: Surface = font.render(text, True, text_color).convert_alpha()
         text_rect = text_surt.get_rect(center = text_center_pos)
         self.window.blit(source=text_surt,dest=text_rect)

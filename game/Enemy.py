@@ -1,13 +1,14 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-
+from game.Const import ENTITY_SPEED, WIN_WIDTH
 from game.Entity import Entity
 
 
 class Enemy(Entity):
     def __init__(self, name: str, position: tuple):
         super().__init__(name, position)
-        self.Attribute1 = None
 
     def move(self, ):
-        pass
+        self.rect.centerx -= ENTITY_SPEED[self.name]
+        if self.rect.right <= 0:
+            self.rect.left = WIN_WIDTH

@@ -1,8 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+import random
 
 from game.Background import Background
-from game.Const import WIN_WIDTH
+from game.Const import WIN_WIDTH, WIN_HEIGHT
+from game.Enemy import Enemy
+from game.Player import Player
 
 
 class EntityFactory:
@@ -12,9 +15,21 @@ class EntityFactory:
             case 'Level1Bg':
                 list_bg = []
                 for i in range(7):
-                    list_bg.append(Background(f'Level1Bg{i}.png',(0,0)))
-                    list_bg.append(Background(f'Level1Bg{i}.png', (WIN_WIDTH, 0)))
+                    list_bg.append(Background(f'level-1/Level1Bg{i}',(0,0)))
+                    list_bg.append(Background(f'level-1/Level1Bg{i}', (WIN_WIDTH, 0)))
                 return list_bg
+            case 'Player1':
+                return Player('Player1', (10, WIN_HEIGHT / 2 - 30))
+
+            case 'Player2':
+                return Player('Player2', (10 / 2, WIN_HEIGHT / 2 - 65))
+
+            case 'Enemy1':
+                return Enemy('Enemy1', (WIN_WIDTH + 10, random.randint(20, WIN_HEIGHT)))
+
+            case 'Enemy2':
+                return Enemy('Enemy2', (WIN_WIDTH + 5, random.randint(20, WIN_HEIGHT)))
+
             case _:
                 return None
 
