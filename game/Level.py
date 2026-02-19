@@ -5,7 +5,7 @@ import random
 import pygame
 from pygame import Surface, Rect, Font
 
-from game.Const import COLOR_WHITE, WIN_HEIGHT, MENU_OPTIONS, EVENT_ENEMY
+from game.Const import COLOR_WHITE, WIN_HEIGHT, MENU_OPTIONS, EVENT_ENEMY, COLOR_GREEN, COLOR_BLUE
 from game.Enemy import Enemy
 from game.EntityFactory import EntityFactory
 from game.Entity import Entity
@@ -46,6 +46,7 @@ class Level:
                     self.entity_list.append(EntityFactory.get_entity(choice))
 
 
+
             # Atualização
             for ent in self.entity_list:
                 self.window.blit(source=ent.surf, dest=ent.rect)
@@ -54,6 +55,11 @@ class Level:
                     shoot = ent.shoot()
                     if shoot is not None:
                         self.entity_list.append(shoot)
+                if ent.name == 'Player1':
+                    self.leve_text(f'Player1 - Health: {ent.health} | Score: {ent.score}', COLOR_GREEN, (10, 30))
+                if ent.name == 'Player2':
+                    self.leve_text(f'Player2 - Health: {ent.health} | Score: {ent.score}', COLOR_BLUE, (10, 60))
+
 
             # printed text
             self.leve_text(f'{self.name} - Timeout:  {self.timeout / 1000 :.1f}s', COLOR_WHITE, (10, 5))

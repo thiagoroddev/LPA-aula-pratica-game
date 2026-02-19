@@ -3,6 +3,8 @@ import pygame
 COLOR_ORANGE = (255,0,0)
 COLOR_WHITE = (255,255,255)
 COLOR_YELLOW = (255,255,0)
+COLOR_GREEN = (0,255,0)
+COLOR_BLUE = (0,0,255)
 
 
 MENU_OPTIONS = ('NEW GAME 1P',
@@ -30,6 +32,25 @@ ENTITY_SPEED = {
     'Enemy1Shoot': 3,
     'Enemy2Shoot': 3
 }
+
+ENTITY_SCORE = {
+    'level-1/Level1Bg0': 0,
+    'level-1/Level1Bg1': 0,
+    'level-1/Level1Bg2': 0,
+    'level-1/Level1Bg3': 0,
+    'level-1/Level1Bg4': 0,
+    'level-1/Level1Bg5': 0,
+    'level-1/Level1Bg6': 0,
+    'Player1': 0,
+    'Player1Shoot': 0,
+    'Player2Shoot': 0,
+    'Player2': 0,
+    'Enemy1': 100,
+    'Enemy2': 110,
+    'Enemy1Shoot': 0,
+    'Enemy2Shoot': 0
+}
+
 
 PLAYER_KEY_UP = {'Player1': pygame.K_UP, 'Player2': pygame.K_w}
 PLAYER_KEY_DOWN = {'Player1': pygame.K_DOWN, 'Player2': pygame.K_s}

@@ -52,10 +52,24 @@ class EntityMediator:
                     ent1.rect.left <= ent2.rect.right and
                     ent1.rect.bottom >= ent2.rect.top and
                     ent1.rect.top <= ent2.rect.bottom):
+                # 1. Aplica o dano (Números)
                 ent1.health -= ent2.damage
                 ent2.health -= ent1.damage
-                ent1.last_dmg = ent2.damage
-                ent2.last_dmg = ent1.damage
+
+                # 2. Registra a "Assinatura" de quem causou o dano (Strings)
+                ent1.last_dmg = ent2.name
+                ent2.last_dmg = ent1.name
+
+    @staticmethod
+    def __give_score(enemy: Enemy, entity_list: list[Entity]):
+        if enemy.last_dmg == 'Player1Shoot':
+            for ent in entity_list:
+                if ent.name == 'Player1':
+                    ent.score += enemy.score
+        elif enemy.last_dmg == 'Player2Shoot':
+            for ent in entity_list:
+                if ent.name == 'Player2':
+                    ent.score += enemy.score
 
     @staticmethod
     def verify_collision(entity_list: list[Entity]):
@@ -70,6 +84,8 @@ class EntityMediator:
 
     @staticmethod
     def verify_health(entity_list: list[Entity]):
-        for i in entity_list:
+        for i in entity_list[:]:
             if i.health <= 0:
+                if isinstance(i, Enemy):
+                    EntityMediator.__give_score(i, entity_list)
                 entity_list.remove(i)
