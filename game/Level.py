@@ -6,8 +6,11 @@ import pygame
 from pygame import Surface, Rect, Font
 
 from game.Const import COLOR_WHITE, WIN_HEIGHT, MENU_OPTIONS, EVENT_ENEMY
+from game.Enemy import Enemy
 from game.EntityFactory import EntityFactory
 from game.Entity import Entity
+from game.EntityMediator import EntityMediator
+from game.Player import Player
 
 
 class Level:
@@ -45,8 +48,12 @@ class Level:
 
             # Atualização
             for ent in self.entity_list:
-               self.window.blit(source=ent.surf, dest=ent.rect)
-               ent.move()
+                self.window.blit(source=ent.surf, dest=ent.rect)
+                ent.move()
+                if isinstance(ent, (Player, Enemy)):
+                    shoot = ent.shoot()
+                    if shoot is not None:
+                        self.entity_list.append(shoot)
 
             # printed text
             self.leve_text(f'{self.name} - Timeout:  {self.timeout / 1000 :.1f}s', COLOR_WHITE, (10, 5))
@@ -54,6 +61,8 @@ class Level:
             self.leve_text(f'Entidades: {len(self.entity_list)}', COLOR_WHITE, (10, WIN_HEIGHT -55))
             # Desenho
             pygame.display.flip()
+            EntityMediator.verify_collision(self.entity_list)
+            EntityMediator.verify_health(self.entity_list)
 
 
     def leve_text(self, text:str, text_color:tuple, text_pos: tuple):
