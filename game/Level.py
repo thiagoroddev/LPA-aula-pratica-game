@@ -15,22 +15,43 @@ from game.Player import Player
 
 
 class Level:
-    def __init__(self, window, name, game_mode):
+    def __init__(self, window: Surface, name: str, game_mode: str, player_score: list[int]):
         self.window = window
         self.name = name
         self.game_mode = game_mode
         self.entity_list : list[Entity] = []
         self.entity_list.extend(EntityFactory.get_entity(self.name + 'Bg'))
         self.entity_list.append(EntityFactory.get_entity('Player1'))
+        self.player_score = player_score  # Adiciona a pontuação dos jogadores ao nível
+        
+        # Garante que player_score tem pelo menos 2 elementos
+        while len(player_score) < 2:
+            player_score.append(0)
+        
+        # Atribui pontuação ao Player1 (busca por nome para garantir)
+        for ent in self.entity_list:
+            if ent.name == 'Player1':
+                ent.score = player_score[0]
+                break
+
         self.timeout = TIMEOUT_LEVEL # 20 segundos
         self.font = pygame.font.SysFont('Arial', 18)
         if game_mode in [MENU_OPTIONS[1], MENU_OPTIONS[2]]:
             self.entity_list.append(EntityFactory.get_entity('Player2'))
+            # Atribui pontuação ao Player2 (busca por nome para garantir)
+            for ent in self.entity_list:
+                if ent.name == 'Player2':
+                    ent.score = player_score[1]
+                    break
+
         pygame.time.set_timer(EVENT_ENEMY, SPAW_TIME)
-        pygame.time.set_timer(EVENT_TIMEOUT, TIMEOUT_STEP)
+        # pygame.time.set_timer(EVENT_TIMEOUT, TIMEOUT_STEP)  # Removido - não mais necessário
 
     def run(self):
-        pygame.mixer_music.load(f'./asset/level-1/{self.name}.mp3')
+        # Extrai o número do level (Level1 -> 1, Level2 -> 2)
+        level_number = self.name.replace('Level', '') # Extrai o número do level
+        level_folder = f'level-{level_number}' # Pasta correspondente ao level
+        pygame.mixer_music.load(f'./asset/{level_folder}/{self.name}.mp3')
         pygame.mixer_music.play(-1)
         clock = pygame.time.Clock() #Controla FPS
 
@@ -47,10 +68,29 @@ class Level:
                     choice = random.choice(('Enemy1', 'Enemy2'))
                     self.entity_list.append(EntityFactory.get_entity(choice))
                 if event.type == EVENT_TIMEOUT:
-                    self.timeout -= TIMEOUT_STEP
-                    if self.timeout == 0:
-                        return True
+                    # Não precisa decrementar novamente, já é feito por dt
+                    pass
+            
+            # Verifica se o tempo acabou
+            if self.timeout <= 0:
+                return True
 
+            # Verificação de Game Over - verifica se ainda há players vivos
+            found_player1 = False
+            found_player2 = False
+            for ent in self.entity_list:
+                if ent.name == 'Player1':
+                    found_player1 = True
+                if ent.name == 'Player2':
+                    found_player2 = True 
+
+            # Verifica Game Over baseado no modo de jogo
+            if self.game_mode == MENU_OPTIONS[0]:  # 1 Player
+                if not found_player1:
+                    return "GAME_OVER"
+            elif self.game_mode in [MENU_OPTIONS[1], MENU_OPTIONS[2]]:  # 2 Players
+                if not found_player1 and not found_player2:
+                    return "GAME_OVER" 
 
             # Atualização
             for ent in self.entity_list:

@@ -16,9 +16,9 @@ MENU_OPTIONS = ('NEW GAME 1P',
                  'EXIT')
 
 
-SPAW_TIME = 4000
+SPAW_TIME = 1000
 TIMEOUT_STEP = 100 # 100 ms
-TIMEOUT_LEVEL = 20000 # 20 segundos
+TIMEOUT_LEVEL = 10000 # 20 segundos
 
 EVENT_ENEMY = pygame.USEREVENT + 1
 EVENT_TIMEOUT = pygame.USEREVENT + 2
@@ -90,9 +90,9 @@ ENTITY_HEALTH = {
     'level-1/Level1Bg4': 999,
     'level-1/Level1Bg5': 999,
     'level-1/Level1Bg6': 999,
-    'Player1': 300,
+    'Player1': 100,
     'Player1Shoot': 1,
-    'Player2': 300,
+    'Player2': 100,
     'Player2Shoot': 1,
     'Enemy1': 50,
     'Enemy2': 50,
